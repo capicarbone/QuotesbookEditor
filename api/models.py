@@ -10,6 +10,9 @@ class Author(models.Model):
     lang = models.CharField('Language', max_length=2, choices=(('en', 'English'), ('es', 'Spanish')))
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return "%s %s (%s)" % (self.first_name, self.last_name, self.lang)
+
 class Quote(models.Model):
     author_id = models.ForeignKey(Author, null=False, on_delete=models.CASCADE)
     body = models.TextField('Body', blank=False)
