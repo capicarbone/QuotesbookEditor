@@ -1,5 +1,5 @@
 
-from .models import Author
+from .models import Author, Quote
 from rest_framework import  serializers
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -7,3 +7,11 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ['id', 'first_name', 'last_name', 'short_description', 'lang']
+
+
+class QuoteSerializer(serializers.ModelSerializer):
+    author_id = AuthorSerializer(read_only=True)
+
+    class Meta:
+        model = Quote
+        fields = ['id', 'body','author_id', 'lang']
