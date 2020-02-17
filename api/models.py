@@ -14,7 +14,7 @@ class Author(models.Model):
         return "%s %s (%s)" % (self.first_name, self.last_name, self.lang)
 
 class Quote(models.Model):
-    author_id = models.ForeignKey(Author, null=False, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, null=False, on_delete=models.CASCADE)
     body = models.TextField('Body', blank=False)
     is_dayquote = models.BooleanField(default=False)
     lang = models.CharField('Language', max_length=2, choices=(('en', 'English'), ('es', 'Spanish')))

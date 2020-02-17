@@ -10,8 +10,8 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class QuoteSerializer(serializers.ModelSerializer):
-    author_id = AuthorSerializer(read_only=True)
+    author = AuthorSerializer(read_only=True)
 
     class Meta:
         model = Quote
-        fields = ['id', 'body','author_id', 'lang']
+        fields = ['id', 'body','author', 'lang']
