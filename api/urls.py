@@ -10,5 +10,6 @@ urlpatterns = [
     #path('', include(router.urls)),
     path(r'authors', AuthorsListView.as_view()),
     path(r'quotes', QuotesListView.as_view()),
+    path(r'quotes/sample', QuotesSampleView.as_view()),
     path('auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
