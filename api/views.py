@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import random
+import json
 from rest_framework import generics
 from rest_framework.views import APIView, Response
 
@@ -33,8 +34,9 @@ class QuotesSampleView(APIView):
 
         lang = self.request.query_params.get('lang') or 'en'
         requested_count = self.request.query_params.get('count') or 25
+        filter_ids = json.loads(self.request.query_params.get('filter_ids')) if  self.request.query_params.get('filter_ids') else []
 
-        queryset = Quote.objects.filter(lang=lang)
+        queryset = Quote.objects.filter(lang=lang).exclude(author__in=filter_ids).order_by('body')
         quotes_count = queryset.count()
 
         available_pages = int(quotes_count / self.SAMPLE_PAGE_SIZE)
@@ -76,4 +78,5 @@ class QuotesSampleView(APIView):
 
         serializer = QuoteSerializer(quotes, many=True)
         return Response(serializer.data)
+        #return Response(filter_ids)
 
