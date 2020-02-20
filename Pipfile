@@ -11,6 +11,7 @@ djangorestframework = "*"
 "psycopg2" = "*"
 django-heroku = "*"
 whitenoise = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
