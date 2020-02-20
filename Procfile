@@ -1,0 +1,1 @@
+web: gunicorn QuotesBookAPI.wsgi --log-file -
