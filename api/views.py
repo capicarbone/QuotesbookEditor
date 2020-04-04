@@ -24,7 +24,7 @@ class QuotesListView(generics.ListAPIView):
 
 class QuotesSampleView(APIView):
 
-    SAMPLE_PAGE_SIZE = 10
+    SAMPLE_PAGE_SIZE = 75
     QUOTES_BY_PAGE = 3
 
     """
@@ -36,7 +36,7 @@ class QuotesSampleView(APIView):
         requested_count = self.request.query_params.get('count') or 25
         filter_ids = json.loads(self.request.query_params.get('filter_ids')) if  self.request.query_params.get('filter_ids') else []
 
-        queryset = Quote.objects.filter(lang=lang).exclude(author__in=filter_ids).order_by('body')
+        queryset = Quote.objects.filter(lang=lang).exclude(author__in=filter_ids).order_by('author_id')
         quotes_count = queryset.count()
 
         available_pages = int(quotes_count / self.SAMPLE_PAGE_SIZE)
@@ -62,21 +62,29 @@ class QuotesSampleView(APIView):
 
         # Getting random quotes from pages
         quotes = []
+        last_author_id = None
         for page in pages:
             new_quotes = []
             page_quotes = list(page)
 
-            while len(new_quotes) < self.QUOTES_BY_PAGE and len(page_quotes) != 0 and len(quotes) < requested_count:
+            while len(new_quotes) < self.QUOTES_BY_PAGE and len(page_quotes) != 0 and len(quotes) <= requested_count:
                 index = random.randint(0, len(page_quotes)-1)
 
-                quote = page_quotes[index]
-                new_quotes.append(quote)
+                quote = page_quotes[index]                
                 del(page_quotes[index])
-                quotes.append(quote)
+
+                if ( last_author_id != quote.author_id):
+                    new_quotes.append(quote)
+                    quotes.append(quote)
+
+                # Due to we are ordering by author, we could receive several quotes with the same author in a row,
+                # so I improve this with large page sizes and also forcing to not have a new quote with the same author as 
+                # the last selected
+                last_author_id = quote.author_id
 
 
 
         serializer = QuoteSerializer(quotes, many=True)
         return Response(serializer.data)
-        #return Response(filter_ids)
+        
 
