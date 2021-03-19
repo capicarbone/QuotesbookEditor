@@ -1,0 +1,15 @@
+version: '3.2'
+
+services:
+    quotesbook:
+        build: ./
+        container_name: quotesbook-editor
+        ports:
+            - 5000:8000
+        volumes:
+            - ./:/app/
+            - quotesbook_data:/app/data
+volumes:
+  quotesbook_data:
+
+
